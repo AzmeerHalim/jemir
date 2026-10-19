@@ -23,15 +23,10 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 
-# Debug & temp files
-debug_*.php
-debug_*.html
-check_*.php
-test_*.php
-verify_*.php
-server_*.txt
-srv2_*.txt
-*.dmp
-
-# Database
-/database/*.sqlite
+# Scratch and debug files
+debug_*
+check_*
+test_*
+verify_*
+server_*
+srv2_*
