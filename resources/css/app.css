@@ -1,0 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+}
+
+@layer components {
+    .gradient-primary {
+        @apply bg-gradient-to-r from-violet-600 to-indigo-600;
+    }
+
+    .gradient-card {
+        @apply bg-gradient-to-br from-violet-500 to-indigo-600;
+    }
+
+    .glass {
+        @apply bg-white/80 backdrop-blur-xl border border-white/20;
+    }
+}
