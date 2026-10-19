@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\StudentProfile>
+ * @extends Factory<StudentProfile>
  */
 class StudentProfileFactory extends Factory
 {
@@ -20,9 +20,9 @@ class StudentProfileFactory extends Factory
         return [
             'user_id' => User::factory()->student(),
             'student_name' => null,
-            'matric_no' => 'A' . fake()->unique()->numerify('######'),
+            'matric_no' => 'A'.fake()->unique()->numerify('######'),
             'ic_number' => fake()->numerify('############'),
-            'phone' => '01' . fake()->numerify('#########'),
+            'phone' => '01'.fake()->numerify('#########'),
             'date_of_birth' => fake()->date('Y-m-d', '2005-01-01'),
             'gender' => fake()->randomElement(['Male', 'Female']),
             'nationality' => 'Malaysian',

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Lecturer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Achievement;
-use App\Models\AccompanyingLecturer;
 use Illuminate\Http\Request;
 
 class AchievementVerificationController extends Controller

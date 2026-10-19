@@ -12,15 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('achievements', function (Blueprint $table) {
-    $table->id();
-    $table->foreignId('student_id')->constrained()->onDelete('cascade');
-    $table->string('title');
-    $table->string('level'); // faculty, university, national, international
-    $table->string('certificate')->nullable();
-    $table->integer('score')->default(0);
-    $table->string('status')->default('pending'); // pending, approved, rejected
-    $table->timestamps();
-});
+            $table->id();
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            $table->string('level'); // faculty, university, national, international
+            $table->string('certificate')->nullable();
+            $table->integer('score')->default(0);
+            $table->string('status')->default('pending'); // pending, approved, rejected
+            $table->timestamps();
+        });
     }
 
     /**

@@ -11,6 +11,7 @@ class ClusterController extends Controller
     public function index()
     {
         $clusters = Cluster::withCount('studentProfiles')->get();
+
         return view('itc.clusters.index', compact('clusters'));
     }
 
@@ -29,7 +30,7 @@ class ClusterController extends Controller
     public function update(Request $request, Cluster $cluster)
     {
         $data = $request->validate([
-            'cluster_name' => ['required', 'string', 'max:255', 'unique:clusters,cluster_name,' . $cluster->id],
+            'cluster_name' => ['required', 'string', 'max:255', 'unique:clusters,cluster_name,'.$cluster->id],
             'description' => ['nullable', 'string'],
         ]);
 
@@ -41,6 +42,7 @@ class ClusterController extends Controller
     public function destroy(Cluster $cluster)
     {
         $cluster->delete();
+
         return redirect()->route('itc.clusters.index')->with('success', 'Cluster deleted.');
     }
 }

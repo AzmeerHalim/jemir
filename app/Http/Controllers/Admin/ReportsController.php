@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Achievement;
 
 class ReportsController extends Controller
 {
@@ -20,7 +20,7 @@ class ReportsController extends Controller
     public function export()
     {
         // CSV export placeholder
-        $achievements = \App\Models\Achievement::with('student.user', 'category')
+        $achievements = Achievement::with('student.user', 'category')
             ->where('status', 'approved')
             ->latest()
             ->get();

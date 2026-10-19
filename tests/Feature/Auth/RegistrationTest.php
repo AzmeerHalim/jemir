@@ -123,9 +123,9 @@ test('register page exposes all student fields and no role selector', function (
     $response->assertStatus(200);
 
     foreach (['name', 'username', 'email', 'password', 'password_confirmation',
-              'matric_no', 'programme', 'year',
-              'gender', 'date_of_birth', 'nationality', 'ic_number', 'phone', 'address',
-              'talent', 'skills', 'interests'] as $field) {
+        'matric_no', 'programme', 'year',
+        'gender', 'date_of_birth', 'nationality', 'ic_number', 'phone', 'address',
+        'talent', 'skills', 'interests'] as $field) {
         $response->assertSee('name="'.$field.'"', false);
     }
 

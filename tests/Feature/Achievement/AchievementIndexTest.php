@@ -1,12 +1,17 @@
 <?php
 
 use App\Enums\UserRole;
+use App\Models\AccompanyingLecturer;
 use App\Models\Achievement;
+use App\Models\Activity;
 use App\Models\Category;
 use App\Models\Cluster;
+use App\Models\Participation;
 use App\Models\StudentProfile;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     $this->clusters = Cluster::firstOrCreate(['cluster_name' => 'Test Cluster'], ['description' => 't']);
@@ -51,7 +56,7 @@ beforeEach(function () {
             'email_verified_at' => now(),
         ],
     );
-    $this->lecturerProfile = \App\Models\AccompanyingLecturer::updateOrCreate(
+    $this->lecturerProfile = AccompanyingLecturer::updateOrCreate(
         ['user_id' => $this->lecturer->id],
         [
             'lecturer_name' => 'Index Lecturer',
@@ -94,7 +99,7 @@ test('achievement index shows the unified list with source and status badges', f
             'email_verified_at' => now(),
         ],
     );
-    $activity = \App\Models\Activity::create([
+    $activity = Activity::create([
         'activity_name' => 'Verified Activity',
         'activity_type' => 'competition',
         'activity_date' => now()->addWeek(),
@@ -103,7 +108,7 @@ test('achievement index shows the unified list with source and status badges', f
         'created_by' => $coordinator->id,
         'is_open' => true,
     ]);
-    $participation = \App\Models\Participation::create([
+    $participation = Participation::create([
         'student_id' => $this->studentProfile->id,
         'activity_id' => $activity->id,
         'participation_role' => 'Participant',
@@ -187,7 +192,7 @@ test('source tab filter splits participation from self-submitted', function () {
             'email_verified_at' => now(),
         ],
     );
-    $activity = \App\Models\Activity::create([
+    $activity = Activity::create([
         'activity_name' => 'Source Test Activity',
         'activity_type' => 'competition',
         'activity_date' => now()->addWeek(),
@@ -196,7 +201,7 @@ test('source tab filter splits participation from self-submitted', function () {
         'created_by' => $coordinator->id,
         'is_open' => true,
     ]);
-    $participation = \App\Models\Participation::create([
+    $participation = Participation::create([
         'student_id' => $this->studentProfile->id,
         'activity_id' => $activity->id,
         'participation_role' => 'Participant',
@@ -271,7 +276,7 @@ test('auto-created participation achievement shows participation source badge an
         ],
     );
 
-    $activity = \App\Models\Activity::create([
+    $activity = Activity::create([
         'activity_name' => 'Unified Test Activity',
         'activity_type' => 'competition',
         'activity_date' => now()->addWeek(),
@@ -281,7 +286,7 @@ test('auto-created participation achievement shows participation source badge an
         'is_open' => true,
     ]);
 
-    \App\Models\Participation::create([
+    Participation::create([
         'student_id' => $this->studentProfile->id,
         'activity_id' => $activity->id,
         'participation_role' => 'Participant',
@@ -398,10 +403,10 @@ test('achievement create form exposes accompanying_id and event_photo fields', f
 });
 
 test('student can store achievement with accompanying_id and both uploads', function () {
-    \Illuminate\Support\Facades\Storage::fake('public');
+    Storage::fake('public');
 
-    $cert = \Illuminate\Http\UploadedFile::fake()->createWithContent('cert.pdf', '%PDF-1.4 fake');
-    $photo = \Illuminate\Http\UploadedFile::fake()->createWithContent('event.jpg', 'fake-jpeg-bytes');
+    $cert = UploadedFile::fake()->createWithContent('cert.pdf', '%PDF-1.4 fake');
+    $photo = UploadedFile::fake()->createWithContent('event.jpg', 'fake-jpeg-bytes');
 
     $response = $this->actingAs($this->studentUser)->post(
         route('achievements.store'),
@@ -418,7 +423,7 @@ test('student can store achievement with accompanying_id and both uploads', func
 
     $response->assertRedirect(route('achievements.index'));
 
-    $achievement = \App\Models\Achievement::where('title', 'Self with uploads')->first();
+    $achievement = Achievement::where('title', 'Self with uploads')->first();
     expect($achievement)->not->toBeNull();
     expect((int) $achievement->accompanying_id)->toBe((int) $this->lecturerProfile->id);
     expect($achievement->certificate)->not->toBeNull();
@@ -436,7 +441,7 @@ test('lecturer sees only self-submitted achievements assigned to them', function
             'email_verified_at' => now(),
         ],
     );
-    $otherLecturerProfile = \App\Models\AccompanyingLecturer::updateOrCreate(
+    $otherLecturerProfile = AccompanyingLecturer::updateOrCreate(
         ['user_id' => $otherLecturer->id],
         [
             'lecturer_name' => 'Other Lecturer',
@@ -490,7 +495,7 @@ test('lecturer cannot verify achievement assigned to a different lecturer', func
             'email_verified_at' => now(),
         ],
     );
-    $otherLecturerProfile = \App\Models\AccompanyingLecturer::updateOrCreate(
+    $otherLecturerProfile = AccompanyingLecturer::updateOrCreate(
         ['user_id' => $otherLecturer->id],
         [
             'lecturer_name' => 'Other Lecturer B',

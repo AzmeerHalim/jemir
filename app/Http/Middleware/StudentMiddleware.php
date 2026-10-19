@@ -11,7 +11,7 @@ class StudentMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || auth()->user()->role !== UserRole::Student) {
+        if (! auth()->check() || auth()->user()->role !== UserRole::Student) {
             abort(403, 'Student access required.');
         }
 

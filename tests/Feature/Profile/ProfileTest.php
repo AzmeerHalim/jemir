@@ -56,9 +56,9 @@ test('edit profile form exposes all editable fields', function () {
 
     $response->assertStatus(200);
     foreach (['programme', 'year', 'cgpa', 'expected_graduation',
-              'ic_number', 'date_of_birth', 'gender', 'nationality', 'phone', 'address',
-              'emergency_contact_name', 'emergency_contact_phone',
-              'talent', 'skills', 'interests'] as $field) {
+        'ic_number', 'date_of_birth', 'gender', 'nationality', 'phone', 'address',
+        'emergency_contact_name', 'emergency_contact_phone',
+        'talent', 'skills', 'interests'] as $field) {
         $response->assertSee('name="'.$field.'"', false);
     }
     $response->assertSee('FSKTM', false);

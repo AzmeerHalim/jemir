@@ -25,7 +25,7 @@ class ParticipationApprovalController extends Controller
         if ($search = $request->string('search')->toString()) {
             $query->where(function ($q) use ($search) {
                 $q->whereHas('student.user', fn ($q2) => $q2->where('name', 'like', "%{$search}%"))
-                  ->orWhereHas('activity', fn ($q2) => $q2->where('activity_name', 'like', "%{$search}%"));
+                    ->orWhereHas('activity', fn ($q2) => $q2->where('activity_name', 'like', "%{$search}%"));
             });
         }
 
@@ -132,7 +132,7 @@ class ParticipationApprovalController extends Controller
         if ($search = $request->string('search')->toString()) {
             $query->where(function ($q) use ($search) {
                 $q->whereHas('student.user', fn ($q2) => $q2->where('name', 'like', "%{$search}%"))
-                  ->orWhereHas('activity', fn ($q2) => $q2->where('activity_name', 'like', "%{$search}%"));
+                    ->orWhereHas('activity', fn ($q2) => $q2->where('activity_name', 'like', "%{$search}%"));
             });
         }
 

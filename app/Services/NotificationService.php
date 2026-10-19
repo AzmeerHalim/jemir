@@ -29,7 +29,7 @@ class NotificationService
 
     public function achievementRejected(int $userId, string $title, ?string $reason = null): void
     {
-        $message = "Your achievement \"{$title}\" was rejected." . ($reason ? " Reason: {$reason}" : '');
+        $message = "Your achievement \"{$title}\" was rejected.".($reason ? " Reason: {$reason}" : '');
         $this->send($userId, $message, 'achievement_rejected', route('achievements.index'));
     }
 
@@ -45,7 +45,7 @@ class NotificationService
 
     public function participationRejected(int $userId, string $activityName, ?string $reason = null): void
     {
-        $message = "Your participation in \"{$activityName}\" was rejected." . ($reason ? " Reason: {$reason}" : '');
+        $message = "Your participation in \"{$activityName}\" was rejected.".($reason ? " Reason: {$reason}" : '');
         $this->send($userId, $message, 'participation_rejected', route('student.participations.index'));
     }
 

@@ -37,6 +37,7 @@ class ResetDemoUsers extends Command
     {
         if (app()->environment('production')) {
             $this->error('Refusing to run in production environment.');
+
             return self::FAILURE;
         }
 
@@ -60,12 +61,14 @@ class ResetDemoUsers extends Command
 
         if (! $this->option('force')) {
             $this->info('Dry run. Re-run with --force to apply.');
+
             return self::SUCCESS;
         }
 
         $confirmation = $this->ask('Type RESET to confirm');
         if ($confirmation !== 'RESET') {
             $this->error('Aborted.');
+
             return self::FAILURE;
         }
 
@@ -108,6 +111,7 @@ class ResetDemoUsers extends Command
                 $rows[] = [$table, (int) DB::table($table)->count()];
             }
         }
+
         return $rows;
     }
 }

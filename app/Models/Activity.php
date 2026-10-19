@@ -73,7 +73,7 @@ class Activity extends Model
     {
         return $query->where(function ($q) {
             $q->whereNull('registration_deadline')
-              ->orWhere('registration_deadline', '>=', now()->toDateString());
+                ->orWhere('registration_deadline', '>=', now()->toDateString());
         });
     }
 
@@ -87,6 +87,7 @@ class Activity extends Model
         if ($this->max_participants === null) {
             return null;
         }
+
         return max(0, $this->max_participants - $this->participantsCount());
     }
 
@@ -95,6 +96,7 @@ class Activity extends Model
         if ($this->max_participants === null) {
             return false;
         }
+
         return $this->participantsCount() >= $this->max_participants;
     }
 
@@ -108,12 +110,13 @@ class Activity extends Model
         if (empty($this->getTalentsArray())) {
             return 0;
         }
+
         return StudentProfile::where('student_status', 'active')
             ->where(function ($q) {
                 foreach ($this->getTalentsArray() as $talent) {
                     $q->orWhere('talent', 'like', "%{$talent}%")
-                      ->orWhere('skills', 'like', "%{$talent}%")
-                      ->orWhere('interests', 'like', "%{$talent}%");
+                        ->orWhere('skills', 'like', "%{$talent}%")
+                        ->orWhere('interests', 'like', "%{$talent}%");
                 }
             })
             ->count();

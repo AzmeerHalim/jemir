@@ -11,12 +11,14 @@ class StudentManagementController extends Controller
     public function index()
     {
         $students = Student::with('user')->get();
+
         return view('admin.students.index', compact('students'));
     }
 
     public function edit($id)
     {
         $student = Student::findOrFail($id);
+
         return view('admin.students.edit', compact('student'));
     }
 

@@ -56,6 +56,7 @@ class VerificationController extends Controller
         $this->authorizeAccess($participation);
 
         $participation->load('student.user', 'activity', 'accompanyingLecturer');
+
         return view('lecturer.verifications.show', compact('participation'));
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AccompanyingLecturer;
 use App\Models\Achievement;
 use App\Models\Category;
 use App\Services\MeritService;
@@ -15,6 +16,7 @@ class AchievementController extends Controller
         private MeritService $merit,
         private NotificationService $notifications
     ) {}
+
     /**
      * 🔐 GET CURRENT STUDENT (SAFE)
      */
@@ -22,7 +24,7 @@ class AchievementController extends Controller
     {
         $student = auth()->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             abort(403, 'Access denied: Student profile not found');
         }
 
@@ -89,7 +91,8 @@ class AchievementController extends Controller
         $this->getStudent(); // 🔥 ensure only student access
 
         $categories = Category::orderBy('name')->get();
-        $lecturers = \App\Models\AccompanyingLecturer::where('is_active', true)->orderBy('lecturer_name')->get();
+        $lecturers = AccompanyingLecturer::where('is_active', true)->orderBy('lecturer_name')->get();
+
         return view('achievements.create', compact('categories', 'lecturers'));
     }
 
@@ -171,7 +174,7 @@ class AchievementController extends Controller
 
         $achievement = Achievement::findOrFail($id);
         $categories = Category::orderBy('name')->get();
-        $lecturers = \App\Models\AccompanyingLecturer::where('is_active', true)->orderBy('lecturer_name')->get();
+        $lecturers = AccompanyingLecturer::where('is_active', true)->orderBy('lecturer_name')->get();
 
         if ($achievement->student_id != $student->id) {
             abort(403);
@@ -261,55 +264,55 @@ class AchievementController extends Controller
     }
 
     public function history()
-{
-    $achievements = Achievement::with('student.user', 'category')
-        ->whereIn('status', ['approved', 'rejected'])
-        ->latest()
-        ->get();
+    {
+        $achievements = Achievement::with('student.user', 'category')
+            ->whereIn('status', ['approved', 'rejected'])
+            ->latest()
+            ->get();
 
-    return view('admin.achievements-history', compact('achievements'));
-}
+        return view('admin.achievements-history', compact('achievements'));
+    }
 
     /**
      * STUDENT: Delete
      */
     public function destroy($id)
-{
-    $student = $this->getStudent();
+    {
+        $student = $this->getStudent();
 
-    $achievement = Achievement::findOrFail($id);
+        $achievement = Achievement::findOrFail($id);
 
-    if ($achievement->student_id != $student->id) {
-        abort(403);
+        if ($achievement->student_id != $student->id) {
+            abort(403);
+        }
+
+        if ($achievement->status !== 'pending') {
+            return back()->with('error', 'Cannot delete this achievement');
+        }
+
+        if ($achievement->certificate) {
+            \Storage::disk('public')->delete($achievement->certificate);
+        }
+
+        $achievement->delete();
+
+        return back()->with('success', 'Achievement deleted');
     }
-
-    if ($achievement->status !== 'pending') {
-        return back()->with('error', 'Cannot delete this achievement');
-    }
-
-    if ($achievement->certificate) {
-        \Storage::disk('public')->delete($achievement->certificate);
-    }
-
-    $achievement->delete();
-
-    return back()->with('success', 'Achievement deleted');
-}
 
     /**
      * ADMIN: View all (approval page)
      */
     public function adminIndex()
-{
-    $achievements = Achievement::with('student.user', 'category')
-        ->where('lecturer_status', 'pending')
-        ->whereNull('participation_id')
-        ->where('status', 'pending')
-        ->latest()
-        ->paginate(10);
+    {
+        $achievements = Achievement::with('student.user', 'category')
+            ->where('lecturer_status', 'pending')
+            ->whereNull('participation_id')
+            ->where('status', 'pending')
+            ->latest()
+            ->paginate(10);
 
-    return view('admin.approvals', compact('achievements'));
-}
+        return view('admin.approvals', compact('achievements'));
+    }
 
     /**
      * LECTURER: Verify a self-submitted achievement (stage 1 of 2).
@@ -459,7 +462,7 @@ class AchievementController extends Controller
             $this->merit->recomputeForStudent($sid);
         }
 
-        return back()->with('success', count($achievements) . ' achievements approved');
+        return back()->with('success', count($achievements).' achievements approved');
     }
 
     public function bulkReject(Request $request)
@@ -491,6 +494,6 @@ class AchievementController extends Controller
             $this->merit->recomputeForStudent($sid);
         }
 
-        return back()->with('success', count($achievements) . ' achievements rejected');
+        return back()->with('success', count($achievements).' achievements rejected');
     }
 }

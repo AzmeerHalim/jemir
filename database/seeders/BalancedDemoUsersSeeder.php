@@ -20,7 +20,7 @@ class BalancedDemoUsersSeeder extends Seeder
             ['name' => 'Accompanying Lecturer',  'username' => 'lecturer',    'email' => 'lecturer@strms.test',    'role' => UserRole::Lecturer],
             ['name' => 'ITC Admin',              'username' => 'itcadmin',    'email' => 'itcadmin@strms.test',    'role' => UserRole::ItcAdmin],
             ['name' => 'Committee Member',       'username' => 'committee',   'email' => 'committee@strms.test',   'role' => UserRole::Committee],
-            ['name' => 'Student Affairs Officer','username' => 'affairs',     'email' => 'affairs@strms.test',     'role' => UserRole::StudentAffairs],
+            ['name' => 'Student Affairs Officer', 'username' => 'affairs',     'email' => 'affairs@strms.test',     'role' => UserRole::StudentAffairs],
         ];
 
         foreach ($staffAccounts as $account) {

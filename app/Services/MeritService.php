@@ -48,7 +48,7 @@ class MeritService
     {
         $student = StudentProfile::with('achievements')->find($studentId);
 
-        if (!$student) {
+        if (! $student) {
             return;
         }
 

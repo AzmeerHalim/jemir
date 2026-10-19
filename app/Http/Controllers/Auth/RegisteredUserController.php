@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
-use App\Models\Student;
+use App\Models\Cluster;
 use App\Models\StudentProfile;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -20,7 +20,8 @@ class RegisteredUserController extends Controller
 {
     public function create(): View
     {
-        $clusters = \App\Models\Cluster::orderBy('cluster_name')->get();
+        $clusters = Cluster::orderBy('cluster_name')->get();
+
         return view('auth.register', compact('clusters'));
     }
 

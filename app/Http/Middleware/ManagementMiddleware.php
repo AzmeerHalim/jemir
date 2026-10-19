@@ -11,7 +11,7 @@ class ManagementMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check()) {
+        if (! auth()->check()) {
             abort(403);
         }
 
@@ -21,7 +21,7 @@ class ManagementMiddleware
             UserRole::StudentAffairs,
         ];
 
-        if (!in_array(auth()->user()->role, $allowedRoles, true)) {
+        if (! in_array(auth()->user()->role, $allowedRoles, true)) {
             abort(403, 'Management access required.');
         }
 

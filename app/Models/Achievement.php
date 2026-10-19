@@ -49,42 +49,42 @@ class Achievement extends Model
     }
 
     public function student()
-{
-    return $this->belongsTo(Student::class, 'student_id');
-}
+    {
+        return $this->belongsTo(Student::class, 'student_id');
+    }
 
-public function category()
-{
-    return $this->belongsTo(Category::class);
-}
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
 
-public function participation()
-{
-    return $this->belongsTo(Participation::class);
-}
+    public function participation()
+    {
+        return $this->belongsTo(Participation::class);
+    }
 
-public function accompanyingLecturer()
-{
-    return $this->belongsTo(AccompanyingLecturer::class, 'accompanying_id');
-}
+    public function accompanyingLecturer()
+    {
+        return $this->belongsTo(AccompanyingLecturer::class, 'accompanying_id');
+    }
 
-public function reviewedBy()
-{
-    return $this->belongsTo(User::class, 'reviewed_by');
-}
+    public function reviewedBy()
+    {
+        return $this->belongsTo(User::class, 'reviewed_by');
+    }
 
-public function lecturerReviewer()
-{
-    return $this->belongsTo(User::class, 'lecturer_reviewed_by');
-}
+    public function lecturerReviewer()
+    {
+        return $this->belongsTo(User::class, 'lecturer_reviewed_by');
+    }
 
-public function coordinatorReviewer()
-{
-    return $this->belongsTo(User::class, 'coordinator_reviewed_by');
-}
+    public function coordinatorReviewer()
+    {
+        return $this->belongsTo(User::class, 'coordinator_reviewed_by');
+    }
 
-public function isSelfSubmitted(): bool
-{
-    return $this->participation_id === null;
-}
+    public function isSelfSubmitted(): bool
+    {
+        return $this->participation_id === null;
+    }
 }

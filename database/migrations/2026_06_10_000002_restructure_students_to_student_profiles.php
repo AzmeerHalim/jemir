@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('programme')->nullable()->after('year');
         });
 
-        \DB::statement('UPDATE student_profiles SET programme = programme_old');
+        DB::statement('UPDATE student_profiles SET programme = programme_old');
 
         Schema::table('student_profiles', function (Blueprint $table) {
             $table->dropColumn('programme_old');
@@ -45,7 +45,7 @@ return new class extends Migration
             $table->string('course')->nullable()->after('year');
         });
 
-        \DB::statement('UPDATE student_profiles SET course = programme_old');
+        DB::statement('UPDATE student_profiles SET course = programme_old');
 
         Schema::table('student_profiles', function (Blueprint $table) {
             $table->dropColumn('programme_old');

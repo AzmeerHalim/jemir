@@ -1,8 +1,8 @@
 <?php
 
 use App\Enums\UserRole;
-use App\Models\Activity;
 use App\Models\AccompanyingLecturer;
+use App\Models\Activity;
 use App\Models\Cluster;
 use App\Models\Notification;
 use App\Models\Participation;

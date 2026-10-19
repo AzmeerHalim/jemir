@@ -17,7 +17,7 @@ class StudentFactory extends Factory
         return [
             'user_id' => User::factory()->student(),
             'student_name' => null,
-            'matric_no' => 'A' . fake()->unique()->numerify('######'),
+            'matric_no' => 'A'.fake()->unique()->numerify('######'),
             'programme' => fake()->randomElement($programmes),
             'year' => fake()->numberBetween(1, 4),
             'talent' => fake()->optional()->word(),

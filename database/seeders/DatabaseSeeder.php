@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Enums\UserRole;
-use App\Models\Activity;
 use App\Models\AccompanyingLecturer;
+use App\Models\Activity;
 use App\Models\Announcement;
 use App\Models\Category;
 use App\Models\Cluster;
@@ -102,7 +102,7 @@ class DatabaseSeeder extends Seeder
     {
         $studentUser = User::where('email', 'student@strms.test')->first();
 
-        if ($studentUser && !StudentProfile::where('user_id', $studentUser->id)->exists()) {
+        if ($studentUser && ! StudentProfile::where('user_id', $studentUser->id)->exists()) {
             $clusters = Cluster::all();
 
             StudentProfile::create([

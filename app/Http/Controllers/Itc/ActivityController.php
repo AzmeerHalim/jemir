@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Itc;
 
 use App\Http\Controllers\Controller;
+use App\Models\AccompanyingLecturer;
 use App\Models\Activity;
+use App\Models\Category;
+use App\Models\StudentProfile;
+use App\Services\NotificationService;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller
@@ -16,13 +20,15 @@ class ActivityController extends Controller
     public function index()
     {
         $activities = Activity::with('creator')->latest('activity_date')->paginate(15);
+
         return view('itc.activities.index', compact('activities'));
     }
 
     public function create()
     {
-        $categories = \App\Models\Category::orderBy('name')->get();
-        $lecturers = \App\Models\AccompanyingLecturer::where('is_active', true)->orderBy('lecturer_name')->get();
+        $categories = Category::orderBy('name')->get();
+        $lecturers = AccompanyingLecturer::where('is_active', true)->orderBy('lecturer_name')->get();
+
         return view('itc.activities.create', compact('categories', 'lecturers'));
     }
 
@@ -56,8 +62,9 @@ class ActivityController extends Controller
 
     public function edit(Activity $activity)
     {
-        $categories = \App\Models\Category::orderBy('name')->get();
-        $lecturers = \App\Models\AccompanyingLecturer::where('is_active', true)->orderBy('lecturer_name')->get();
+        $categories = Category::orderBy('name')->get();
+        $lecturers = AccompanyingLecturer::where('is_active', true)->orderBy('lecturer_name')->get();
+
         return view('itc.activities.edit', compact('activity', 'categories', 'lecturers'));
     }
 
@@ -91,6 +98,7 @@ class ActivityController extends Controller
     public function destroy(Activity $activity)
     {
         $activity->delete();
+
         return redirect()->route('itc.activities.index')
             ->with('success', 'Activity deleted.');
     }
@@ -103,18 +111,18 @@ class ActivityController extends Controller
             return back()->with('error', 'This activity has no required talents set.');
         }
 
-        $query = \App\Models\StudentProfile::where('student_status', 'active')
+        $query = StudentProfile::where('student_status', 'active')
             ->where(function ($q) use ($talents) {
                 foreach ($talents as $talent) {
                     $q->orWhere('talent', 'like', "%{$talent}%")
-                      ->orWhere('skills', 'like', "%{$talent}%")
-                      ->orWhere('interests', 'like', "%{$talent}%");
+                        ->orWhere('skills', 'like', "%{$talent}%")
+                        ->orWhere('interests', 'like', "%{$talent}%");
                 }
             });
 
         $students = $query->get();
         $notified = 0;
-        $notificationService = app(\App\Services\NotificationService::class);
+        $notificationService = app(NotificationService::class);
         $activityUrl = route('student.activities.show', $activity);
 
         foreach ($students as $student) {
@@ -138,6 +146,7 @@ class ActivityController extends Controller
             return null;
         }
         $parts = array_filter(array_map('trim', explode(',', $value)), fn ($v) => $v !== '');
+
         return $parts === [] ? null : array_values($parts);
     }
 }

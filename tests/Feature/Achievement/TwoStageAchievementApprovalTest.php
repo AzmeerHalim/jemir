@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\UserRole;
+use App\Models\AccompanyingLecturer;
 use App\Models\Achievement;
 use App\Models\Category;
 use App\Models\Cluster;
@@ -50,7 +51,7 @@ beforeEach(function () {
             'email_verified_at' => now(),
         ],
     );
-    $this->lecturerProfile = \App\Models\AccompanyingLecturer::updateOrCreate(
+    $this->lecturerProfile = AccompanyingLecturer::updateOrCreate(
         ['user_id' => $this->lecturer->id],
         [
             'lecturer_name' => 'Two Stage Ach Lecturer',

@@ -46,8 +46,8 @@ class SearchController extends Controller
                     $t = trim($talent);
                     if ($t !== '') {
                         $qb->orWhere('talent', 'like', "%{$t}%")
-                           ->orWhere('skills', 'like', "%{$t}%")
-                           ->orWhere('interests', 'like', "%{$t}%");
+                            ->orWhere('skills', 'like', "%{$t}%")
+                            ->orWhere('interests', 'like', "%{$t}%");
                     }
                 }
             });
@@ -75,7 +75,7 @@ class SearchController extends Controller
 
     public function notifySelected(Request $request)
     {
-        if (!auth()->user()->isItcAdmin() && !auth()->user()->isManagement()) {
+        if (! auth()->user()->isItcAdmin() && ! auth()->user()->isManagement()) {
             abort(403);
         }
 

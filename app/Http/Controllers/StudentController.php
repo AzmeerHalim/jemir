@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\Models\Student;
-use App\Models\Category;
-
 
 class StudentController extends Controller
 {
@@ -14,7 +13,7 @@ class StudentController extends Controller
     {
         $student = auth()->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return redirect('/dashboard')->with('error', 'Profile not found');
         }
 
@@ -25,7 +24,7 @@ class StudentController extends Controller
     {
         $student = auth()->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return redirect('/dashboard');
         }
 
@@ -36,7 +35,7 @@ class StudentController extends Controller
     {
         $student = auth()->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return redirect('/dashboard');
         }
 
@@ -97,48 +96,48 @@ class StudentController extends Controller
             return null;
         }
         $parts = array_filter(array_map('trim', explode(',', $value)), fn ($v) => $v !== '');
+
         return $parts === [] ? null : array_values($parts);
     }
 
-
     public function categoryLeaderboard(Request $request, $id)
-{
-    $category = \App\Models\Category::findOrFail($id);
+    {
+        $category = Category::findOrFail($id);
 
-    $programme = $request->programme;
+        $programme = $request->programme;
 
-    $students = \App\Models\Student::with('user')
-        ->when($programme, function ($query) use ($programme) {
-            $query->where('course', $programme);
-        })
-        ->get()
-        ->map(function ($s) use ($id) {
+        $students = Student::with('user')
+            ->when($programme, function ($query) use ($programme) {
+                $query->where('course', $programme);
+            })
+            ->get()
+            ->map(function ($s) use ($id) {
 
-            $s->score = $s->achievements()
-                ->where('status','approved')
-                ->where('category_id', $id)
-                ->sum('score');
+                $s->score = $s->achievements()
+                    ->where('status', 'approved')
+                    ->where('category_id', $id)
+                    ->sum('score');
 
-            return $s;
-        })
-        ->sortByDesc('score')
-        ->values();
+                return $s;
+            })
+            ->sortByDesc('score')
+            ->values();
 
-    $programmes = \App\Models\Student::select('course')->distinct()->pluck('course');
+        $programmes = Student::select('course')->distinct()->pluck('course');
 
-    return view('admin.category-leaderboard', compact(
-        'students',
-        'category',
-        'programmes',
-        'programme'
-    ));
-}
+        return view('admin.category-leaderboard', compact(
+            'students',
+            'category',
+            'programmes',
+            'programme'
+        ));
+    }
 
     public function history()
     {
         $student = auth()->user()->student;
 
-        if (!$student) {
+        if (! $student) {
             return redirect('/dashboard');
         }
 
@@ -146,33 +145,30 @@ class StudentController extends Controller
     }
 
     public function leaderboard(Request $request)
-{
-    $categoryId = $request->category_id;
+    {
+        $categoryId = $request->category_id;
 
-    $students = \App\Models\Student::with(['user', 'achievements'])
-        ->get()
-        ->map(function ($student) use ($categoryId) {
+        $students = Student::with(['user', 'achievements'])
+            ->get()
+            ->map(function ($student) use ($categoryId) {
 
-            $achievements = $student->achievements()
-                ->where('status', 'approved');
+                $achievements = $student->achievements()
+                    ->where('status', 'approved');
 
-            // 🔥 filter by category
-            if ($categoryId) {
-                $achievements->where('category_id', $categoryId);
-            }
+                // 🔥 filter by category
+                if ($categoryId) {
+                    $achievements->where('category_id', $categoryId);
+                }
 
-            $student->total_score = $achievements->sum('score');
+                $student->total_score = $achievements->sum('score');
 
-            return $student;
-        })
-        ->sortByDesc('total_score')
-        ->values();
+                return $student;
+            })
+            ->sortByDesc('total_score')
+            ->values();
 
-    $categories = \App\Models\Category::all();
+        $categories = Category::all();
 
-    return view('students.leaderboard', compact('students', 'categories', 'categoryId'));
-}
-
-
-    
+        return view('students.leaderboard', compact('students', 'categories', 'categoryId'));
+    }
 }

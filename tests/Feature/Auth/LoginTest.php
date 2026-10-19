@@ -5,11 +5,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 $accounts = [
-    'student'         => ['student@strms.test',     UserRole::Student,         'student.dashboard',     '/student/dashboard'],
-    'coordinator'     => ['coordinator@strms.test', UserRole::Coordinator,     'coordinator.dashboard', '/coordinator/dashboard'],
-    'lecturer'        => ['lecturer@strms.test',    UserRole::Lecturer,        'lecturer.dashboard',    '/lecturer/dashboard'],
-    'itc_admin'       => ['itcadmin@strms.test',    UserRole::ItcAdmin,        'itc.dashboard',         '/itc/dashboard'],
-    'committee'       => ['committee@strms.test',   UserRole::Committee,       'committee.dashboard',   '/committee/dashboard'],
+    'student' => ['student@strms.test',     UserRole::Student,         'student.dashboard',     '/student/dashboard'],
+    'coordinator' => ['coordinator@strms.test', UserRole::Coordinator,     'coordinator.dashboard', '/coordinator/dashboard'],
+    'lecturer' => ['lecturer@strms.test',    UserRole::Lecturer,        'lecturer.dashboard',    '/lecturer/dashboard'],
+    'itc_admin' => ['itcadmin@strms.test',    UserRole::ItcAdmin,        'itc.dashboard',         '/itc/dashboard'],
+    'committee' => ['committee@strms.test',   UserRole::Committee,       'committee.dashboard',   '/committee/dashboard'],
     'student_affairs' => ['affairs@strms.test',     UserRole::StudentAffairs,  'affairs.dashboard',     '/affairs/dashboard'],
 ];
 

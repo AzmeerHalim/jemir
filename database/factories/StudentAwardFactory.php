@@ -2,14 +2,15 @@
 
 namespace Database\Factories;
 
+use App\Models\StudentAward;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\StudentAward>
+ * @extends Factory<StudentAward>
  */
 class StudentAwardFactory extends Factory
 {
-    protected $model = \App\Models\StudentAward::class;
+    protected $model = StudentAward::class;
 
     public function definition(): array
     {

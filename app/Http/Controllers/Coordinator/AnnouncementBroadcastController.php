@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Coordinator;
 
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Models\Announcement;
-use App\Models\Notification;
+use App\Models\User;
 use App\Services\NotificationService;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class AnnouncementBroadcastController extends Controller
 {
@@ -16,6 +16,7 @@ class AnnouncementBroadcastController extends Controller
     public function index()
     {
         $announcements = Announcement::with('author')->latest()->paginate(15);
+
         return view('coordinator.announcements.index', compact('announcements'));
     }
 
@@ -40,7 +41,7 @@ class AnnouncementBroadcastController extends Controller
             'is_published' => true,
         ]);
 
-        foreach (User::where('role', \App\Enums\UserRole::Student->value)->get() as $student) {
+        foreach (User::where('role', UserRole::Student->value)->get() as $student) {
             $this->notifications->newAnnouncement($student->id, $announcement->announcement_title);
         }
 
@@ -51,6 +52,7 @@ class AnnouncementBroadcastController extends Controller
     public function destroy(Announcement $announcement)
     {
         $announcement->delete();
+
         return redirect()->route('coordinator.announcements.index')
             ->with('success', 'Announcement deleted.');
     }

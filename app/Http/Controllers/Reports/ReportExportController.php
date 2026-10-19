@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Reports;
 
+use App\Exports\AchievementsExport;
+use App\Exports\StudentsExport;
 use App\Http\Controllers\Controller;
 use App\Models\Achievement;
-use App\Models\Category;
 use App\Models\StudentProfile;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReportExportController extends Controller
@@ -22,12 +25,13 @@ class ReportExportController extends Controller
         $format = $request->get('format', 'csv');
 
         if ($format === 'pdf') {
-            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.pdf.achievements', compact('achievements'));
+            $pdf = Pdf::loadView('reports.pdf.achievements', compact('achievements'));
+
             return $pdf->download('achievements-report.pdf');
         }
 
         if ($format === 'xlsx') {
-            return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\AchievementsExport($achievements), 'achievements-report.xlsx');
+            return Excel::download(new AchievementsExport($achievements), 'achievements-report.xlsx');
         }
 
         return $this->csvResponse($achievements->map(fn ($a) => [
@@ -49,12 +53,13 @@ class ReportExportController extends Controller
         $format = $request->get('format', 'csv');
 
         if ($format === 'pdf') {
-            $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('reports.pdf.students', compact('students'));
+            $pdf = Pdf::loadView('reports.pdf.students', compact('students'));
+
             return $pdf->download('students-report.pdf');
         }
 
         if ($format === 'xlsx') {
-            return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\StudentsExport($students), 'students-report.xlsx');
+            return Excel::download(new StudentsExport($students), 'students-report.xlsx');
         }
 
         return $this->csvResponse($students->map(fn ($s) => [

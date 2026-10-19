@@ -17,7 +17,7 @@ class AccompanyingLecturerSeeder extends Seeder
             ['name' => 'Dr. Tan Soo Lian',  'email' => 'lecturer2@strms.test'],
             ['name' => 'Dr. Rajesh Kumar',  'email' => 'lecturer3@strms.test'],
             ['name' => 'Dr. Nurul Ain',     'email' => 'lecturer4@strms.test'],
-            ['name' => 'Dr. Chong Mei Fong','email' => 'lecturer5@strms.test'],
+            ['name' => 'Dr. Chong Mei Fong', 'email' => 'lecturer5@strms.test'],
         ];
 
         foreach ($accounts as $i => $account) {

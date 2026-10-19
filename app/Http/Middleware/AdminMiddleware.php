@@ -11,7 +11,7 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || auth()->user()->role !== UserRole::Coordinator) {
+        if (! auth()->check() || auth()->user()->role !== UserRole::Coordinator) {
             abort(403, 'Coordinator access required.');
         }
 

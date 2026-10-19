@@ -1,9 +1,11 @@
 <?php
 
+use App\Enums\UserRole;
 use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ReportsController;
 use App\Http\Controllers\Admin\SettingsController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Admin\StudentManagementController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Coordinator\AnnouncementBroadcastController;
 use App\Http\Controllers\Coordinator\AwardController;
@@ -11,9 +13,9 @@ use App\Http\Controllers\Coordinator\ParticipationApprovalController;
 use App\Http\Controllers\Coordinator\UserManagementController;
 use App\Http\Controllers\Itc\ActivityController as ItcActivityController;
 use App\Http\Controllers\Itc\ClusterController as ItcClusterController;
+use App\Http\Controllers\Lecturer\AchievementVerificationController;
 use App\Http\Controllers\Lecturer\VerificationController;
 use App\Http\Controllers\Management\SearchController as ManagementSearchController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Reports\ReportExportController;
 use App\Http\Controllers\Student\ActivityController as StudentActivityController;
 use App\Http\Controllers\Student\AnnouncementController as StudentAnnouncementController;
@@ -39,12 +41,13 @@ Route::get('/', fn () => view('welcome'));
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', function () {
         $role = auth()->user()->role;
+
         return match ($role) {
-            \App\Enums\UserRole::Coordinator => redirect()->route('coordinator.dashboard'),
-            \App\Enums\UserRole::Lecturer => redirect()->route('lecturer.dashboard'),
-            \App\Enums\UserRole::ItcAdmin => redirect()->route('itc.dashboard'),
-            \App\Enums\UserRole::Committee => redirect()->route('committee.dashboard'),
-            \App\Enums\UserRole::StudentAffairs => redirect()->route('affairs.dashboard'),
+            UserRole::Coordinator => redirect()->route('coordinator.dashboard'),
+            UserRole::Lecturer => redirect()->route('lecturer.dashboard'),
+            UserRole::ItcAdmin => redirect()->route('itc.dashboard'),
+            UserRole::Committee => redirect()->route('committee.dashboard'),
+            UserRole::StudentAffairs => redirect()->route('affairs.dashboard'),
             default => redirect()->route('student.dashboard'),
         };
     })->name('dashboard');
@@ -95,7 +98,7 @@ Route::middleware(['auth', 'student'])->group(function () {
 */
 
 Route::middleware(['auth', 'coordinator'])->prefix('coordinator')->name('coordinator.')->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Achievement approvals
     Route::get('/approvals', [AchievementController::class, 'adminIndex'])->name('approvals');
@@ -113,9 +116,9 @@ Route::middleware(['auth', 'coordinator'])->prefix('coordinator')->name('coordin
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.delete');
 
     // Students management
-    Route::get('/students', [\App\Http\Controllers\Admin\StudentManagementController::class, 'index'])->name('students');
-    Route::get('/students/{id}/edit', [\App\Http\Controllers\Admin\StudentManagementController::class, 'edit'])->name('students.edit');
-    Route::post('/students/{id}/update', [\App\Http\Controllers\Admin\StudentManagementController::class, 'update'])->name('students.update');
+    Route::get('/students', [StudentManagementController::class, 'index'])->name('students');
+    Route::get('/students/{id}/edit', [StudentManagementController::class, 'edit'])->name('students.edit');
+    Route::post('/students/{id}/update', [StudentManagementController::class, 'update'])->name('students.update');
     Route::post('/students/{student}/archive', [UserManagementController::class, 'archiveStudent'])->name('students.archive');
 
     // Category leaderboard
@@ -167,11 +170,11 @@ Route::middleware(['auth', 'lecturer'])->prefix('lecturer')->name('lecturer.')->
     Route::post('/verifications/{participation}/reject', [VerificationController::class, 'reject'])->name('verifications.reject');
 
     // Two-stage self-submitted achievements
-    Route::get('/achievement-verifications', [\App\Http\Controllers\Lecturer\AchievementVerificationController::class, 'index'])->name('achievement-verifications.index');
-    Route::get('/achievement-verifications/history', [\App\Http\Controllers\Lecturer\AchievementVerificationController::class, 'history'])->name('achievement-verifications.history');
-    Route::get('/achievement-verifications/{achievement}', [\App\Http\Controllers\Lecturer\AchievementVerificationController::class, 'show'])->name('achievement-verifications.show');
-    Route::post('/achievement-verifications/{achievement}/verify', [\App\Http\Controllers\Lecturer\AchievementVerificationController::class, 'verify'])->name('achievement-verifications.verify');
-    Route::post('/achievement-verifications/{achievement}/reject', [\App\Http\Controllers\Lecturer\AchievementVerificationController::class, 'reject'])->name('achievement-verifications.reject');
+    Route::get('/achievement-verifications', [AchievementVerificationController::class, 'index'])->name('achievement-verifications.index');
+    Route::get('/achievement-verifications/history', [AchievementVerificationController::class, 'history'])->name('achievement-verifications.history');
+    Route::get('/achievement-verifications/{achievement}', [AchievementVerificationController::class, 'show'])->name('achievement-verifications.show');
+    Route::post('/achievement-verifications/{achievement}/verify', [AchievementVerificationController::class, 'verify'])->name('achievement-verifications.verify');
+    Route::post('/achievement-verifications/{achievement}/reject', [AchievementVerificationController::class, 'reject'])->name('achievement-verifications.reject');
 });
 
 /*
@@ -226,7 +229,7 @@ Route::middleware(['auth', 'management'])->prefix('affairs')->name('affairs.')->
 */
 
 Route::middleware(['auth', 'coordinator'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/approvals', [AchievementController::class, 'adminIndex'])->name('approvals');
     Route::post('/approvals/bulk-approve', [AchievementController::class, 'bulkApprove'])->name('approvals.bulk-approve');
     Route::post('/approvals/bulk-reject', [AchievementController::class, 'bulkReject'])->name('approvals.bulk-reject');
@@ -239,9 +242,9 @@ Route::middleware(['auth', 'coordinator'])->prefix('admin')->name('admin.')->gro
     Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.delete');
 
-    Route::get('/students', [\App\Http\Controllers\Admin\StudentManagementController::class, 'index'])->name('students');
-    Route::get('/students/{id}/edit', [\App\Http\Controllers\Admin\StudentManagementController::class, 'edit'])->name('students.edit');
-    Route::post('/students/{id}/update', [\App\Http\Controllers\Admin\StudentManagementController::class, 'update'])->name('students.update');
+    Route::get('/students', [StudentManagementController::class, 'index'])->name('students');
+    Route::get('/students/{id}/edit', [StudentManagementController::class, 'edit'])->name('students.edit');
+    Route::post('/students/{id}/update', [StudentManagementController::class, 'update'])->name('students.update');
 
     Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
     Route::get('/reports/export', [ReportsController::class, 'export'])->name('reports.export');

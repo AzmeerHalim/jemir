@@ -11,7 +11,7 @@ class ItcAdminMiddleware
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->check() || auth()->user()->role !== UserRole::ItcAdmin) {
+        if (! auth()->check() || auth()->user()->role !== UserRole::ItcAdmin) {
             abort(403, 'ITC Admin access required.');
         }
 

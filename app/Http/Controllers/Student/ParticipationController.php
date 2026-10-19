@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
-use App\Models\Activity;
 use App\Models\AccompanyingLecturer;
+use App\Models\Activity;
 use App\Models\Participation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -29,6 +29,7 @@ class ParticipationController extends Controller
             ->where('is_active', true)
             ->orderBy('lecturer_name')
             ->get();
+
         return view('student.participations.create', compact('activity', 'lecturers'));
     }
 
@@ -40,7 +41,7 @@ class ParticipationController extends Controller
             return back()->with('error', 'This activity is already full. No spots remaining.');
         }
 
-        if (!$activity->is_open) {
+        if (! $activity->is_open) {
             return back()->with('error', 'Registration for this activity is closed.');
         }
 
@@ -52,7 +53,7 @@ class ParticipationController extends Controller
             return back()->with('error', 'You have already joined this activity.');
         }
 
-        if ($activity->accompanying_id && !$request->filled('accompanying_id')) {
+        if ($activity->accompanying_id && ! $request->filled('accompanying_id')) {
             $request->merge(['accompanying_id' => $activity->accompanying_id]);
         }
 
@@ -80,6 +81,7 @@ class ParticipationController extends Controller
         }
 
         $participation->load('activity', 'accompanyingLecturer', 'verifiedBy');
+
         return view('student.participations.show', compact('participation'));
     }
 
@@ -89,11 +91,12 @@ class ParticipationController extends Controller
             abort(403);
         }
 
-        if (!in_array($participation->participation_status, ['pending', 'rejected'])) {
+        if (! in_array($participation->participation_status, ['pending', 'rejected'])) {
             return back()->with('error', 'You can only upload proof for pending or rejected participations.');
         }
 
         $participation->load('activity');
+
         return view('student.participations.edit', compact('participation'));
     }
 
@@ -103,7 +106,7 @@ class ParticipationController extends Controller
             abort(403);
         }
 
-        if (!in_array($participation->participation_status, ['pending', 'rejected'])) {
+        if (! in_array($participation->participation_status, ['pending', 'rejected'])) {
             return back()->with('error', 'You can only upload proof for pending or rejected participations.');
         }
 
